@@ -1,0 +1,13 @@
+ EPOCH3D vnknow   unknown-unknown-g5c77de8-dirty 1606906520.888        
+
+ Loaded 79488 particles of species "Electron"
+ Loaded 0 particles of species "Bwelectron"
+ Loaded 0 particles of species "Bwpositron"
+Wrote ebn     dump number    0 at time  0.132084642858E-15 and iteration      0
+Wrote qed     dump number    0 at time  0.132084642858E-15 and iteration      0
+Wrote ebn     dump number    1 at time  0.335494992859E-13 and iteration    127
+Wrote qed     dump number    1 at time  0.335494992859E-13 and iteration    127
+Wrote ebn     dump number    2 at time  0.668348292861E-13 and iteration    253
+Wrote qed     dump number    2 at time  0.668348292861E-13 and iteration    253
+Wrote ebn     dump number    3 at time  0.100120159286E-12 and iteration    379
+Wrote qed     dump number    3 at time  0.100120159286E-12 and iteration    379
