@@ -247,6 +247,24 @@ CONTAINS
     ELSE IF (str_cmp(element, 'pz_max')) THEN
       n = c_subset_pz_max
 
+    ELSE IF (str_cmp(element, 'spx_min')) THEN ! LTY
+      n = c_subset_spx_min
+
+    ELSE IF (str_cmp(element, 'spx_max')) THEN
+      n = c_subset_spx_max
+
+    ELSE IF (str_cmp(element, 'spy_min')) THEN
+      n = c_subset_spy_min
+
+    ELSE IF (str_cmp(element, 'spy_max')) THEN
+      n = c_subset_spy_max
+
+    ELSE IF (str_cmp(element, 'spz_min')) THEN
+      n = c_subset_spz_min
+
+    ELSE IF (str_cmp(element, 'spz_max')) THEN
+      n = c_subset_spz_max ! LTY
+
     ELSE IF (str_cmp(element, 'weight_min')) THEN
       n = c_subset_weight_min
 
@@ -413,6 +431,9 @@ CONTAINS
       subset_list(i)%restriction(c_subset_px_min)     = -HUGE(1.0_num)
       subset_list(i)%restriction(c_subset_py_min)     = -HUGE(1.0_num)
       subset_list(i)%restriction(c_subset_pz_min)     = -HUGE(1.0_num)
+      subset_list(i)%restriction(c_subset_spx_min)     = -HUGE(1.0_num) ! LTY
+      subset_list(i)%restriction(c_subset_spy_min)     = -HUGE(1.0_num)
+      subset_list(i)%restriction(c_subset_spz_min)     = -HUGE(1.0_num)
       subset_list(i)%restriction(c_subset_weight_min) = -HUGE(1.0_num)
       subset_list(i)%restriction(c_subset_charge_min) = -HUGE(1.0_num)
       subset_list(i)%restriction(c_subset_mass_min)   = -HUGE(1.0_num)

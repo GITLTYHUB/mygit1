@@ -1440,6 +1440,18 @@ CONTAINS
           CALL sdf_read_point_variable(sdf_handle, npart_local, &
               species_subtypes(ispecies), it_pz)
 
+        ELSE IF (block_id(1:3) == 'spx/') THEN ! LTY
+          CALL sdf_read_point_variable(sdf_handle, npart_local, &
+              species_subtypes(ispecies), it_spx)
+
+        ELSE IF (block_id(1:3) == 'spy/') THEN
+          CALL sdf_read_point_variable(sdf_handle, npart_local, &
+              species_subtypes(ispecies), it_spy)
+
+        ELSE IF (block_id(1:3) == 'spz/') THEN
+          CALL sdf_read_point_variable(sdf_handle, npart_local, &
+              species_subtypes(ispecies), it_spz)
+
         ELSE IF (block_id(1:3) == 'id/') THEN
 #if defined(PARTICLE_ID) || defined(PARTICLE_ID4)
           ! Particle IDs may either be 4 or 8-byte integers, depending on the
@@ -1844,6 +1856,66 @@ CONTAINS
     it_pz = 0
 
   END FUNCTION it_pz
+
+
+
+  FUNCTION it_spx(array, npart_this_it, start, param) ! LTY
+
+    REAL(num) :: it_spx
+    REAL(num), DIMENSION(:), INTENT(IN) :: array
+    INTEGER, INTENT(INOUT) :: npart_this_it
+    LOGICAL, INTENT(IN) :: start
+    INTEGER, INTENT(IN), OPTIONAL :: param
+    INTEGER :: ipart
+
+    DO ipart = 1, npart_this_it
+      iterator_list%part_sp(1) = array(ipart)
+      iterator_list => iterator_list%next
+    END DO
+
+    it_spx = 0
+
+  END FUNCTION it_spx
+
+
+
+  FUNCTION it_spy(array, npart_this_it, start, param)
+
+    REAL(num) :: it_spy
+    REAL(num), DIMENSION(:), INTENT(IN) :: array
+    INTEGER, INTENT(INOUT) :: npart_this_it
+    LOGICAL, INTENT(IN) :: start
+    INTEGER, INTENT(IN), OPTIONAL :: param
+    INTEGER :: ipart
+
+    DO ipart = 1, npart_this_it
+      iterator_list%part_sp(2) = array(ipart)
+      iterator_list => iterator_list%next
+    END DO
+
+    it_spy = 0
+
+  END FUNCTION it_spy
+
+
+
+  FUNCTION it_spz(array, npart_this_it, start, param)
+
+    REAL(num) :: it_spz
+    REAL(num), DIMENSION(:), INTENT(IN) :: array
+    INTEGER, INTENT(INOUT) :: npart_this_it
+    LOGICAL, INTENT(IN) :: start
+    INTEGER, INTENT(IN), OPTIONAL :: param
+    INTEGER :: ipart
+
+    DO ipart = 1, npart_this_it
+      iterator_list%part_sp(3) = array(ipart)
+      iterator_list => iterator_list%next
+    END DO
+
+    it_spz = 0
+
+  END FUNCTION it_spz ! LTY
 
 
 

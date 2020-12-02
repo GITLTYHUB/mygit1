@@ -211,6 +211,9 @@ MODULE constants
   INTEGER, PARAMETER :: c_dir_yz_angle = c_ndims + 7
   INTEGER, PARAMETER :: c_dir_zx_angle = c_ndims + 8
   INTEGER, PARAMETER :: c_dir_mod_p = c_ndims + 9
+  INTEGER, PARAMETER :: c_dir_spx = c_ndims + 10 ! LTY
+  INTEGER, PARAMETER :: c_dir_spy = c_ndims + 11
+  INTEGER, PARAMETER :: c_dir_spz = c_ndims + 12
 
   ! constants defining the maximum number of dimensions and directions
   ! in a distribution function
@@ -405,6 +408,9 @@ MODULE constants
   INTEGER, PARAMETER :: c_const_dir_yz_angle = 89
   INTEGER, PARAMETER :: c_const_dir_zx_angle = 90
   INTEGER, PARAMETER :: c_const_dir_mod_p = 91
+  INTEGER, PARAMETER :: c_const_dir_spx = 92 ! LTY
+  INTEGER, PARAMETER :: c_const_dir_spy = 93
+  INTEGER, PARAMETER :: c_const_dir_spz = 94
 
   INTEGER, PARAMETER :: c_const_maxwell_solver_yee = 100
   INTEGER, PARAMETER :: c_const_maxwell_solver_lehe = 101
@@ -418,6 +424,9 @@ MODULE constants
   INTEGER, PARAMETER :: c_const_px = 108
   INTEGER, PARAMETER :: c_const_py = 109
   INTEGER, PARAMETER :: c_const_pz = 110
+  INTEGER, PARAMETER :: c_const_spx = 111 ! LTY
+  INTEGER, PARAMETER :: c_const_spy = 112
+  INTEGER, PARAMETER :: c_const_spz = 113
 
   ! Custom constants
   INTEGER, PARAMETER :: c_const_deck_lowbound = 4096
@@ -567,6 +576,9 @@ MODULE constants
   INTEGER, PARAMETER :: c_dump_part_work_z_total = 70
   INTEGER, PARAMETER :: c_dump_part_opdepth_brem = 71
   INTEGER, PARAMETER :: num_vars_to_dump         = 71
+  INTEGER, PARAMETER :: c_dump_part_spx           = 72  ! LTY
+  INTEGER, PARAMETER :: c_dump_part_spy           = 73
+  INTEGER, PARAMETER :: c_dump_part_spz           = 74
 
   INTEGER, PARAMETER :: c_subset_random     = 1
   INTEGER, PARAMETER :: c_subset_gamma_min  = 2
@@ -591,7 +603,13 @@ MODULE constants
   INTEGER, PARAMETER :: c_subset_mass_max   = 21
   INTEGER, PARAMETER :: c_subset_id_min     = 22
   INTEGER, PARAMETER :: c_subset_id_max     = 23
-  INTEGER, PARAMETER :: c_subset_max        = 23
+  INTEGER, PARAMETER :: c_subset_max        = 24 ! LTY 23
+  INTEGER, PARAMETER :: c_subset_spx_min     = 25 ! LTY
+  INTEGER, PARAMETER :: c_subset_spx_max     = 26
+  INTEGER, PARAMETER :: c_subset_spy_min     = 27
+  INTEGER, PARAMETER :: c_subset_spy_max     = 28
+  INTEGER, PARAMETER :: c_subset_spz_min     = 29
+  INTEGER, PARAMETER :: c_subset_spz_max     = 30
 
   INTEGER, PARAMETER :: c_max_string_length = 64
   INTEGER, PARAMETER :: c_max_prefix = 16

@@ -1035,7 +1035,7 @@ CONTAINS
 #if !defined(PER_SPECIES_WEIGHT) || defined (PHOTONS) || defined(BREMSSTRAHLUNG)
         new_particle%weight = wbuf(read_count)
 #endif
-        IF (curr_loader%px_data_given) THEN
+        IF (curr_loader%px_data_given) THEN ! LTY no need to add spx?
           new_particle%part_p(1) = pxbuf(read_count)
         END IF
         IF (curr_loader%py_data_given) THEN

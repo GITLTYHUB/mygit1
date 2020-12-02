@@ -128,6 +128,32 @@ CONTAINS
           cur => cur%next
         END DO
 
+      CASE (c_dump_part_spx)    ! LTY
+        ndim = 1
+        DO WHILE (ASSOCIATED(cur) .AND. (part_count < npoint_it))
+          part_count = part_count + 1
+          array(part_count) = cur%part_sp(ndim)
+          cur => cur%next
+        END DO
+
+      CASE (c_dump_part_spy)
+        ndim = 2
+        DO WHILE (ASSOCIATED(cur) .AND. (part_count < npoint_it))
+          part_count = part_count + 1
+          array(part_count) = cur%part_sp(ndim)
+          cur => cur%next
+        END DO
+
+      CASE (c_dump_part_spz)
+        ndim = 3
+        DO WHILE (ASSOCIATED(cur) .AND. (part_count < npoint_it))
+          part_count = part_count + 1
+          array(part_count) = cur%part_sp(ndim)
+          cur => cur%next
+        END DO ! LTY
+
+
+
       CASE (c_dump_part_vx)
         ndim = 1
 #if defined(PHOTONS) || defined(BREMSSTRAHLUNG)
@@ -313,8 +339,8 @@ CONTAINS
           array(part_count) = cur%optical_depth
           cur => cur%next
         END DO
-#endif
-
+#endif      
+    
 #if defined(PHOTONS) || defined(BREMSSTRAHLUNG)
       CASE (c_dump_part_qed_energy)
         DO WHILE (ASSOCIATED(cur) .AND. (part_count < npoint_it))

@@ -644,6 +644,12 @@ CONTAINS
         CALL write_particle_variable(c_dump_part_vz, code, &
             'Vz', 'm/s', it_output_real)
 
+        CALL write_particle_variable(c_dump_part_spx, code, &  ! LTY
+            'spx', '', it_output_real)
+        CALL write_particle_variable(c_dump_part_spy, code, &
+            'spy', '', it_output_real)
+        CALL write_particle_variable(c_dump_part_spz, code, &
+            'spz', '', it_output_real)
         CALL write_particle_variable(c_dump_part_ek, code, &
             'Ek', 'J', it_output_real)
         CALL write_particle_variable(c_dump_part_rel_mass, code, &
@@ -1562,7 +1568,7 @@ CONTAINS
               + REAL(array * dt, r4)
         END DO
         DEALLOCATE(array)
-      CASE(c_dump_average_px)
+      CASE(c_dump_average_px) ! LTY ? does this need to be modified for spx?
         ALLOCATE(array(1-ng:nx+ng,1-ng:ny+ng,1-ng:nz+ng))
         DO ispecies = 1, n_species_local
           CALL calc_average_momentum(array, ispecies-avg%species_sum, c_dir_x)

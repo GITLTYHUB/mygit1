@@ -55,6 +55,7 @@ CONTAINS
     ! Properties of the current particle. Copy out of particle arrays for speed
     REAL(num) :: part_x, part_y, part_z
     REAL(num) :: part_ux, part_uy, part_uz
+    REAL(num) :: part_spx, part_spy, part_spz ! LTY  add particle spin-polarization
     REAL(num) :: part_q, part_mc, ipart_mc, part_weight, part_m
 #ifdef HC_PUSH
     REAL(num) :: beta_x, beta_y, beta_z, beta2, beta_dot_u, alpha, sigma
@@ -245,7 +246,10 @@ CONTAINS
         part_ux = current%part_p(1) * ipart_mc
         part_uy = current%part_p(2) * ipart_mc
         part_uz = current%part_p(3) * ipart_mc
-
+                                                    ! LTY ?
+        part_spx = current%part_sp(1)
+        part_spy = current%part_sp(2)
+        part_spz = current%part_sp(3)
         ! Calculate v(t) from p(t)
         ! See PSC manual page (25-27)
         gamma_rel = SQRT(part_ux**2 + part_uy**2 + part_uz**2 + 1.0_num)
@@ -412,6 +416,8 @@ CONTAINS
         current%part_pos = (/ part_x + x_grid_min_local, &
             part_y + y_grid_min_local, part_z + z_grid_min_local /)
         current%part_p   = part_mc * (/ part_ux, part_uy, part_uz /)
+
+        current%part_sp = (/part_spx, part_spy, part_spz/) ! LTY
 
 #ifdef WORK_DONE_INTEGRATED
         ! This is the actual total work done by the fields: Results correspond

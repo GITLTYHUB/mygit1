@@ -172,6 +172,27 @@ CONTAINS
               TRIM(probe_name), it_probe_real, c_dump_part_pz, &
               part_probe_offset, convert)
 
+          ! dump sPx     ! LTY
+          WRITE(temp_name, '(a, ''/Spx'')') TRIM(probe_name)
+          CALL sdf_write_point_variable(sdf_handle, TRIM(temp_name), &
+              TRIM(temp_name), TRIM(probe_name), '', npart_probe_global, &
+              TRIM(probe_name), it_probe_real, c_dump_part_spx, &
+              part_probe_offset, convert)
+
+          ! dump sPy
+          WRITE(temp_name, '(a, ''/Spy'')') TRIM(probe_name)
+          CALL sdf_write_point_variable(sdf_handle, TRIM(temp_name), &
+              TRIM(temp_name), TRIM(probe_name), '', npart_probe_global, &
+              TRIM(probe_name), it_probe_real, c_dump_part_spy, &
+              part_probe_offset, convert)
+
+          ! dump sPz
+          WRITE(temp_name, '(a, ''/Spz'')') TRIM(probe_name)
+          CALL sdf_write_point_variable(sdf_handle, TRIM(temp_name), &
+              TRIM(temp_name), TRIM(probe_name), '', npart_probe_global, &
+              TRIM(probe_name), it_probe_real, c_dump_part_spz, &
+              part_probe_offset, convert)
+
           ! dump particle weight function
           WRITE(temp_name, '(a, ''/weight'')') TRIM(probe_name)
 #ifndef PER_SPECIES_WEIGHT
@@ -283,6 +304,30 @@ CONTAINS
       DO WHILE (ASSOCIATED(cur) .AND. (part_count < npoint_it))
         part_count = part_count + 1
         array(part_count) = cur%part_p(ndim)
+        cur => cur%next
+      END DO
+
+    CASE (c_dump_part_spx)  ! LTY
+      ndim = 1
+      DO WHILE (ASSOCIATED(cur) .AND. (part_count < npoint_it))
+        part_count = part_count + 1
+        array(part_count) = cur%part_sp(ndim)
+        cur => cur%next
+      END DO
+
+    CASE (c_dump_part_spy)
+      ndim = 2
+      DO WHILE (ASSOCIATED(cur) .AND. (part_count < npoint_it))
+        part_count = part_count + 1
+        array(part_count) = cur%part_sp(ndim)
+        cur => cur%next
+      END DO
+
+    CASE (c_dump_part_spz)
+      ndim = 3
+      DO WHILE (ASSOCIATED(cur) .AND. (part_count < npoint_it))
+        part_count = part_count + 1
+        array(part_count) = cur%part_sp(ndim)
         cur => cur%next
       END DO
 

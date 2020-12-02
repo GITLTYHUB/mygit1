@@ -43,6 +43,7 @@ CONTAINS
   SUBROUTINE set_partlist_size
 
     nvar = 3 + c_ndims
+    nvar = nvar+3 ! LTY
 #if !defined(PER_SPECIES_WEIGHT) || defined(PHOTONS) || defined(BREMSSTRAHLUNG)
     nvar = nvar+1
 #endif
@@ -419,6 +420,8 @@ CONTAINS
     cpos = cpos+c_ndims
     array(cpos:cpos+2) = a_particle%part_p
     cpos = cpos+3
+    array(cpos:cpos+2) = a_particle%part_sp  ! LTY
+    cpos = cpos+3
 #if !defined(PER_SPECIES_WEIGHT) || defined(PHOTONS) || defined(BREMSSTRAHLUNG)
     array(cpos) = a_particle%weight
     cpos = cpos+1
@@ -491,6 +494,8 @@ CONTAINS
     cpos = cpos+c_ndims
     a_particle%part_p = array(cpos:cpos+2)
     cpos = cpos+3
+    a_particle%part_sp = array(cpos:cpos+2) ! LTY
+    cpos = cpos+3
 #if !defined(PER_SPECIES_WEIGHT) || defined(PHOTONS) || defined(BREMSSTRAHLUNG)
     a_particle%weight = array(cpos)
     cpos = cpos+1
@@ -560,6 +565,7 @@ CONTAINS
 
     new_particle%part_p = 0.0_num
     new_particle%part_pos = 0.0_num
+    new_particle%part_sp = 0.0_num  ! LTY
 #if !defined(PER_SPECIES_WEIGHT) || defined(PHOTONS) || defined(BREMSSTRAHLUNG)
     new_particle%weight = 0.0_num
 #endif
@@ -634,6 +640,7 @@ CONTAINS
 
     PRINT *, 'Position', a_particle%part_pos
     PRINT *, 'Momentum', a_particle%part_p
+    PRINT *, 'Spin-polarization', a_particle%part_sp ! LTY
 
   END SUBROUTINE display_particle
 

@@ -1,0 +1,230 @@
+# EPOCH source LG input deck file by lty.2018.08.25.
+# Note: all the fourteen valid blocks are listed.
+#20181127,lgth5.thick target. gaussian laser.has been verified by 2D simulation. right! Additional change should refer to input-right and input-rightc.
+
+#================ Constant ====================
+begin:constant
+  #--------------- Laser -----------------------
+  lambda0 = 1.0*micron   #laser wavelength
+  omega = 2*pi*c/lambda0
+  T0 = 2*pi/omega
+  alaser = 100
+  ilaser = alaser*alaser*c*c*c*epsilon0*me*me*omega*omega/(2*qe*qe)
+  r = sqrt(y*y+z*z)
+  phi0=if(y gt 0,if(z gt 0,atan(z/y),atan(z/y)+2*pi),atan(z/y)+pi)
+  #phi0 = asin(z/r)        #angle in the cylindrical coordinate
+  p = 0                   #LGpl mode laser
+  l = 0
+  C_pl = 1.0              #C_pl=sqrt(pi/2.0)*sqrt(2*p!/(pi*(p+abs(l))!))
+  L_pl = 1.0              #L_pl=L_pl(2*r*r/(wx*wx)), L_0l(x)=1.0, L_1l(x)=l+1.0-x,
+                          #L_2l(x)=0.5*(l+1.0)(l+2.0)-(l+2.0)*x+0.5*x*x.
+  w0 = 3*micron         #beam waist radius: w0>2*lambda0/pi
+  xr = pi*w0*w0/lambda0   #Rayleigh length
+  xr2 = 2*pi*w0*w0/lambda0
+
+  wx = w0*sqrt(1+(x/xr)^2)
+  wx2 = w0*sqrt(1+(x/xr2)^2)
+  rx = x*x+xr*xr
+  rx2 = x*x+xr2*xr2
+  phix = atan(x/xr)       #Gouy phase of the basic mode
+  phix2 = atan(x/xr2) 
+
+  tend = 30*T0
+
+  #------------- Part & Grid -----------------
+  den_nc = critical(omega)    #critical density
+
+end:constant
+
+
+#================ Control ======================
+begin:control
+  #-----------size of domain--------------
+  x_min = -11.0 * micron
+  x_max = 31.0 * micron
+  y_min = -8.0 * micron
+  y_max =  8.0 * micron
+  z_min = -8.0 * micron
+  z_max =  8.0 * micron
+
+  #-----global number of gridpoints-------
+  nx = 300
+  ny = 100
+  nz = 100
+  #nx = 840
+  #ny = 240
+  #nz = 240
+ 
+  t_end = tend
+
+  dt_multiplier = 0.9
+
+  print_constants = T
+
+  stdout_frequency = 10
+end:control
+
+
+#==============Boundaries=====================
+begin:boundaries
+  bc_x_min = simple_laser
+  #bc_x_max_field = simple_outflow
+  #bc_x_max_particle = simple_outflow
+  bc_x_max = simple_outflow
+  #bc_x_max = thermal
+  bc_y_min = periodic
+  bc_y_max = periodic
+  bc_z_min = periodic
+  bc_z_max = periodic
+
+end:boundaries
+
+begin:laser
+  boundary = x_min
+  id = 1
+  intensity = ilaser 
+  lambda = lambda0
+  pol_angle = 0.0
+  phase = -pi*r*r*x/(lambda0*rx)+(abs(l)+2.0*p+1.0)*phix-l*phi0  #for all LGpl modes
+  profile = C_pl*(w0/wx)*((r*sqrt(2.0)/wx)^(abs(l)))*exp(-r*r/(wx*wx))*L_pl   
+  t_profile = gauss(time,7.5*T0,5*T0)
+end:laser
+
+begin:laser
+  boundary = x_min
+  id = 2
+  intensity = ilaser*0.5 
+  lambda = 0.5*lambda0
+  pol_angle = 0.0
+  phase = -pi*r*r*x/(0.5*lambda0*rx2)+(abs(l)+2.0*p+1.0)*phix2-l*phi0  #for all LGpl modes
+  profile = C_pl*(w0/wx2)*((r*sqrt(2.0)/wx2)^(abs(l)))*exp(-r*r/(wx2*wx2))*L_pl   
+  t_profile = gauss(time,7.5*T0,5*T0)
+end:laser
+
+#================ Species ======================
+begin:species
+  name = Electron
+  charge = -1.0
+  mass = 1.0
+
+  npart_per_cell = 4
+
+  density = if((x gt 20.0*micron) and (r lt 1.5*micron) and (x lt 30*micron), 0.1*den_nc,0)
+  temp_ev = 0.0
+  drift_px = -4000*me*c
+  identify:electron
+
+end:species
+
+begin:species
+  name = Photon
+  charge = 0.0
+  mass = 0.0
+  density = 0.0
+  npart = 0
+  identify:photon
+end:species
+
+#begin:species
+#  name = Positron
+#  charge = 1.0
+#  mass = 1.0
+#  density = 0.0
+#  npart = 0
+#  identify:positron
+#end:species
+
+begin:species
+  name = Bwelectron
+  charge = -1.0
+  mass = 1.0
+  #density = 0.0
+  npart_per_cell = 4
+  temp_ev = 0.0
+  density = if((x gt 30.3*micron) and (r lt 0.1*micron) and (x lt 30.4*micron), 0.1*den_nc,0)
+  #npart = 0
+  identify:bw_electron
+end:species
+
+begin:species
+  name = Bwpositron
+  charge = 1.0
+  mass = 1.0
+  #density = 0.0
+  npart_per_cell = 4
+  temp_ev = 0.0
+  density = if((x gt 30.3*micron) and (r lt 0.1*micron) and (x lt 30.4*micron), 0.1*den_nc,0)
+  #npart = 0
+  identify:bw_positron
+end:species
+
+
+
+begin:qed
+  use_qed = T
+  qed_start_time = 0.0
+  produce_photons = T
+  photon_energy_min = 1.0 * 1000000 * ev
+  photon_dynamics = T
+  produce_pairs = T  #both produce_photons and photon_dynamics must be T for this to work
+end:qed
+
+
+
+begin:subset
+  name = ele
+  random_fraction = 0.1
+  #gamma_min = 1.5
+  include_species:Electron
+end:subset
+
+begin:subset
+  name = backgroundph
+  random_fraction = 0.1
+  include_species:Photon
+end:subset
+
+begin:subset
+  name = background
+  random_fraction = 0.1
+#  include_species:Positron
+  include_species:Bwelectron
+  include_species:Bwpositron
+end:subset
+
+
+#==================== Output ========================
+begin:output
+  name = o1
+  file_prefix = ebn
+  dt_snapshot = 10 * T0
+  #dt_average = 1 * T0
+
+  number_density = always + species + single
+  #ey = always + single
+  bz = always + single
+end:output
+
+
+begin:output
+  #disabled = T
+  name = o2
+  file_prefix = qed
+  dt_snapshot = 10 * T0
+  #dt_average = 1 * T0
+  #restart_dump_every = 5
+  #---------------particle variables---------------
+  particle_grid =  ele + background + backgroundph + single
+  px =  ele + background + backgroundph + single
+  py =  ele + background + backgroundph + single
+  pz =  ele + background + backgroundph + single
+  particle_weight =  ele + background + backgroundph + single
+  particle_energy =  ele + background + backgroundph + single
+
+  #spx = background + single
+  spy = ele + single
+  #spz = ele + single
+
+end:output
+
+

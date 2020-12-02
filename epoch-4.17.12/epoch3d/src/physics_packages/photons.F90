@@ -529,6 +529,12 @@ CONTAINS
 
     REAL(num) :: part_x, part_y, part_z
     REAL(num) :: part_ux, part_uy, part_uz
+    REAL(num) :: part_sx, part_sy, part_sz ! LTY
+    REAL(num) :: e_at_part(3), b_at_part(3) ! LTY
+    REAL(num) :: ltygbb, ltysx, ltysy, ltysz ! LTY
+    REAL(num) :: ltydelsx, ltydelsy, ltydelsz ! LTY
+    REAL(num) :: ltybpc, ltybvx, ltybvy, ltybvz ! LTY
+    REAL(num) :: ltybv, ltynx, ltyny, ltynz, ltyph ! LTY
     REAL(num) :: dir_x, dir_y, dir_z
     REAL(num) :: eta, chi_val, part_e, gamma_rel, norm
 
@@ -547,6 +553,7 @@ CONTAINS
           part_ux = current%part_p(1) / mc0
           part_uy = current%part_p(2) / mc0
           part_uz = current%part_p(3) / mc0
+          
           gamma_rel = SQRT(part_ux**2 + part_uy**2 + part_uz**2 + 1.0_num)
 
           eta = calculate_eta(part_x, part_y, part_z, part_ux, part_uy, &
@@ -554,6 +561,35 @@ CONTAINS
 
           current%optical_depth = &
               current%optical_depth - delta_optical_depth(eta, gamma_rel)
+
+          part_sx = current%part_sp(1) ! LTY 
+          part_sy = current%part_sp(2)
+          part_sz = current%part_sp(3)
+         ! LTY evolution of spin  polarization:
+    CALL field_at_particle(part_x, part_y, part_z, e_at_part, b_at_part)
+          ltygbb = part_ux*b_at_part(1) + part_uy*b_at_part(2) &
+                   + part_uz*b_at_part(3)
+          ltysx = (0.00232_num + 2.0_num/gamma_rel)*b_at_part(1) &
+                   - 0.00232_num*ltygbb*part_ux/(gamma_rel**2+gamma_rel) &
+                   - (2.00232_num - 2_num/(c*gamma_rel + c))*(part_uy &
+                   *e_at_part(3) - part_uz*e_at_part(2))
+          ltysy = (0.00232_num + 2.0_num/gamma_rel)*b_at_part(2) &
+                   - 0.00232_num*ltygbb*part_uy/(gamma_rel**2+gamma_rel) &
+                   - (2.00232_num - 2_num/(c*gamma_rel + c))*(part_uz &
+                   *e_at_part(1) - part_ux*e_at_part(3))
+          ltysz = (0.00232_num + 2.0_num/gamma_rel)*b_at_part(3) &
+                   - 0.00232_num*ltygbb*part_uz/(gamma_rel**2+gamma_rel) &
+                   - (2.00232_num - 2_num/(c*gamma_rel + c))*(part_ux &
+                   *e_at_part(2) - part_uy*e_at_part(1))
+          ltydelsx = dt*(0.5_num*q0/m0)*(part_sy*ltysz-part_sz*ltysy)
+          ltydelsy = dt*(0.5_num*q0/m0)*(part_sz*ltysx-part_sx*ltysz)
+          ltydelsz = dt*(0.5_num*q0/m0)*(part_sx*ltysy-part_sy*ltysx)
+
+          current%part_sp(1) = current%part_sp(1) + ltydelsx
+          current%part_sp(2) = current%part_sp(2) + ltydelsy
+          current%part_sp(3) = current%part_sp(3) + ltydelsz ! LTY
+
+
 #ifdef TRIDENT_PHOTONS
           current%optical_depth_tri = current%optical_depth_tri &
               - delta_optical_depth_tri(eta, gamma_rel)
@@ -563,6 +599,33 @@ CONTAINS
             CALL generate_photon(current, photon_species, eta)
             ! ... and reset optical depth
             current%optical_depth = reset_optical_depth()
+
+            ! LTY reset sp:
+          ltybpc = (part_ux*b_at_part(1)+part_uy*b_at_part(2) &  ! TLY
+                    + part_uz*b_at_part(3))/(part_ux**2+part_uy**2 &
+                    + part_uz**2)
+          ltybvx = b_at_part(1)-ltybpc*part_ux
+          ltybvy = b_at_part(2)-ltybpc*part_uy
+          ltybvz = b_at_part(3)-ltybpc*part_uz
+          ltybv = sqrt(ltybvx**2+ltybvy**2+ltybvz**2)
+          IF (ltybv >= c_tiny) THEN      
+          ltynx = ltybvx/ltybv
+          ltyny = ltybvy/ltybv
+          ltynz = ltybvz/ltybv
+            ltyph = current%part_sp(1)*ltynx &    ! LTY
+                    + current%part_sp(2)*ltyny &
+                    + current%part_sp(3)*ltynz
+            IF (ltyph >= 0.0_num) THEN
+            current%part_sp(1) = ltynx
+            current%part_sp(2) = ltyny
+            current%part_sp(3) = ltynz
+            ELSE
+            current%part_sp(1) = -ltynx
+            current%part_sp(2) = -ltyny
+            current%part_sp(3) = -ltynz
+            END IF
+          END IF ! LTY
+
           END IF
 
 #ifdef TRIDENT_PHOTONS
@@ -590,6 +653,7 @@ CONTAINS
           dir_x = current%part_p(1) * norm
           dir_y = current%part_p(2) * norm
           dir_z = current%part_p(3) * norm
+
           part_e  = current%particle_energy / m0 / c**2
           chi_val = calculate_chi(part_x, part_y, part_z, dir_x, dir_y, &
               dir_z, part_e)
@@ -962,7 +1026,14 @@ CONTAINS
     REAL(num), INTENT(IN) :: chi_val
     INTEGER, INTENT(IN) :: iphoton, ielectron, ipositron
     REAL(num) :: dir_x, dir_y, dir_z, mag_p
-    REAL(num) :: probability_split, epsilon_frac, norm
+    REAL(num) :: part_ux, part_uy, part_uz ! LTY
+    REAL(num) :: part_x, part_y, part_z
+    REAL(num) :: e_at_part(3), b_at_part(3) ! LTY
+    REAL(num) :: ltygbb, ltysx, ltysy, ltysz ! LTY
+    REAL(num) :: ltydelsx, ltydelsy, ltydelsz ! LTY
+    REAL(num) :: ltybpc, ltybvx, ltybvy, ltybvz ! LTY
+    REAL(num) :: ltybv, ltynx, ltyny, ltynz ! LTY
+    REAL(num) :: probability_split, epsilon_frac, norm, ltytry
     TYPE(particle), POINTER :: new_electron, new_positron
 
     CALL create_particle(new_electron)
@@ -976,6 +1047,29 @@ CONTAINS
     dir_y = generating_photon%part_p(2) * norm
     dir_z = generating_photon%part_p(3) * norm
 
+          part_x  = generating_photon%part_pos(1) - x_grid_min_local
+          part_y  = generating_photon%part_pos(2) - y_grid_min_local
+          part_z  = generating_photon%part_pos(3) - z_grid_min_local
+          part_ux = generating_photon%part_p(1) / mc0    ! TLY
+          part_uy = generating_photon%part_p(2) / mc0
+          part_uz = generating_photon%part_p(3) / mc0
+    CALL field_at_particle(part_x, part_y, part_z, e_at_part, b_at_part)
+          ltybpc = (part_ux*b_at_part(1)+part_uy*b_at_part(2) &
+                    + part_uz*b_at_part(3))/(part_ux**2+part_uy**2 &
+                    + part_uz**2)
+          ltybvx = b_at_part(1)-ltybpc*part_ux
+          ltybvy = b_at_part(2)-ltybpc*part_uy
+          ltybvz = b_at_part(3)-ltybpc*part_uz
+          ltybv = sqrt(ltybvx**2+ltybvy**2+ltybvz**2)
+          IF (ltybv >= c_tiny) THEN
+          ltynx = ltybvx/ltybv
+          ltyny = ltybvy/ltybv
+          ltynz = ltybvz/ltybv
+          ELSE
+          ltynx = 0.0_num
+          ltyny = 0.0_num
+          ltynz = 0.0_num
+          END IF ! LTY
     ! Determine how to split the energy amoung e-/e+
     ! IS CHI HERE SAME AS ROLAND'S? DEFINED BSinT/B_s
 
@@ -996,6 +1090,42 @@ CONTAINS
 
     new_electron%optical_depth = reset_optical_depth()
     new_positron%optical_depth = reset_optical_depth()
+
+   ltytry = random() ! LTY
+
+   IF (ltytry >= 0.75_num) THEN
+     new_electron%part_sp(1) = ltynx
+     new_electron%part_sp(2) = ltyny
+     new_electron%part_sp(3) = ltynz
+     new_positron%part_sp(1) = ltynx
+     new_positron%part_sp(2) = ltyny
+     new_positron%part_sp(3) = ltynz
+   ELSE IF (ltytry >= 0.5_num) THEN
+     new_electron%part_sp(1) = ltynx
+     new_electron%part_sp(2) = ltyny
+     new_electron%part_sp(3) = ltynz
+     new_positron%part_sp(1) = -ltynx
+     new_positron%part_sp(2) = -ltyny
+     new_positron%part_sp(3) = -ltynz
+ 
+   ELSE IF (ltytry >= 0.25_num) THEN
+     new_electron%part_sp(1) = -ltynx
+     new_electron%part_sp(2) = -ltyny
+     new_electron%part_sp(3) = -ltynz
+     new_positron%part_sp(1) = ltynx
+     new_positron%part_sp(2) = ltyny
+     new_positron%part_sp(3) = ltynz
+
+   ELSE
+     new_electron%part_sp(1) = -ltynx
+     new_electron%part_sp(2) = -ltyny
+     new_electron%part_sp(3) = -ltynz
+     new_positron%part_sp(1) = -ltynx
+     new_positron%part_sp(2) = -ltyny
+     new_positron%part_sp(3) = -ltynz
+
+   END IF ! LTY
+
 
 #ifdef TRIDENT_PHOTONS
     new_electron%optical_depth_tri = reset_optical_depth()

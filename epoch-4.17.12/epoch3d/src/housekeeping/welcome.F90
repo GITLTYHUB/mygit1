@@ -219,7 +219,8 @@ CONTAINS
 #endif
 #ifdef PHOTONS
     defines = IOR(defines, c_def_photons)
-    WRITE(*,*) 'QED Effects -DPHOTONS'
+    WRITE(*,*) 'QED Effects -DPHOTONS. Spin-polarization incorporated.', &
+         'Refer to Yue-Yue Chen, implemented by LTY.'  ! LTY
 #ifdef TRIDENT_PHOTONS
     defines = IOR(defines, c_def_trident_photons)
     WRITE(*,*) 'Pair production by Trident process -DTRIDENT_PHOTONS'

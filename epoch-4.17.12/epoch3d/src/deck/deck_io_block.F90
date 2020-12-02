@@ -533,6 +533,15 @@ CONTAINS
     ELSE IF (str_cmp(element, 'pz')) THEN
       elementselected = c_dump_part_pz
 
+    ELSE IF (str_cmp(element, 'spx')) THEN   ! LTY
+      elementselected = c_dump_part_spx
+
+    ELSE IF (str_cmp(element, 'spy')) THEN
+      elementselected = c_dump_part_spy
+
+    ELSE IF (str_cmp(element, 'spz')) THEN
+    
+      elementselected = c_dump_part_spz
     ELSE IF (str_cmp(element, 'vx')) THEN
       elementselected = c_dump_part_vx
 
@@ -565,6 +574,7 @@ CONTAINS
 #ifdef PHOTONS
     ELSE IF (str_cmp(element, 'optical_depth')) THEN
       elementselected = c_dump_part_opdepth
+
 #endif
 
 #if defined(PHOTONS) || defined(BREMSSTRAHLUNG)
@@ -649,7 +659,7 @@ CONTAINS
     ELSE IF (str_cmp(element, 'average_weight')) THEN
       elementselected = c_dump_average_weight
 
-    ELSE IF (str_cmp(element, 'average_px')) THEN
+    ELSE IF (str_cmp(element, 'average_px')) THEN 
       elementselected = c_dump_average_px
 
     ELSE IF (str_cmp(element, 'average_py')) THEN
@@ -657,6 +667,15 @@ CONTAINS
 
     ELSE IF (str_cmp(element, 'average_pz')) THEN
       elementselected = c_dump_average_pz
+
+    !ELSE IF (str_cmp(element, 'average_spx')) THEN ! LTY
+    !  elementselected = c_dump_average_spx
+
+    !ELSE IF (str_cmp(element, 'average_spy')) THEN
+    !  elementselected = c_dump_average_spy
+
+    !ELSE IF (str_cmp(element, 'average_spz')) THEN
+    !  elementselected = c_dump_average_spz
 
     ELSE IF (str_cmp(element, 'temperature')) THEN
       elementselected = c_dump_temperature
@@ -846,6 +865,9 @@ CONTAINS
         IF (mask_element == c_dump_average_px) bad = .FALSE.
         IF (mask_element == c_dump_average_py) bad = .FALSE.
         IF (mask_element == c_dump_average_pz) bad = .FALSE.
+        !IF (mask_element == c_dump_average_spx) bad = .FALSE. ! LTY
+        !IF (mask_element == c_dump_average_spy) bad = .FALSE.
+        !IF (mask_element == c_dump_average_spz) bad = .FALSE.
         IF (mask_element == c_dump_temperature) bad = .FALSE.
         IF (mask_element == c_dump_temperature_x) bad = .FALSE.
         IF (mask_element == c_dump_temperature_y) bad = .FALSE.
@@ -897,6 +919,9 @@ CONTAINS
         IF (mask_element == c_dump_average_px) bad = .FALSE.
         IF (mask_element == c_dump_average_py) bad = .FALSE.
         IF (mask_element == c_dump_average_pz) bad = .FALSE.
+        !IF (mask_element == c_dump_average_spx) bad = .FALSE. ! LTY
+        !IF (mask_element == c_dump_average_spy) bad = .FALSE.
+        !IF (mask_element == c_dump_average_spz) bad = .FALSE.
         IF (mask_element == c_dump_temperature) bad = .FALSE.
         IF (mask_element == c_dump_temperature_x) bad = .FALSE.
         IF (mask_element == c_dump_temperature_y) bad = .FALSE.
@@ -1082,9 +1107,21 @@ CONTAINS
         IOR(io_block%dumpmask(c_dump_part_py), c_io_restartable)
     io_block%dumpmask(c_dump_part_pz) = &
         IOR(io_block%dumpmask(c_dump_part_pz), c_io_restartable)
+    io_block%dumpmask(c_dump_part_spx) = &                        ! LTY
+        IOR(io_block%dumpmask(c_dump_part_spx), c_io_restartable)
+    io_block%dumpmask(c_dump_part_spy) = &
+        IOR(io_block%dumpmask(c_dump_part_spy), c_io_restartable)
+    io_block%dumpmask(c_dump_part_spz) = &
+        IOR(io_block%dumpmask(c_dump_part_spz), c_io_restartable)
 #ifdef PHOTONS
     io_block%dumpmask(c_dump_part_opdepth) = &
         IOR(io_block%dumpmask(c_dump_part_opdepth), c_io_restartable)
+    !io_block%dumpmask(c_dump_part_spx) = &
+    !    IOR(io_block%dumpmask(c_dump_part_spx), c_io_restartable)  ! LTY
+    !io_block%dumpmask(c_dump_part_spy) = &
+    !    IOR(io_block%dumpmask(c_dump_part_spy), c_io_restartable)
+    !io_block%dumpmask(c_dump_part_spz) = &
+    !    IOR(io_block%dumpmask(c_dump_part_spz), c_io_restartable)
 #endif
 #if defined(PHOTONS) || defined(BREMSSTRAHLUNG)
     io_block%dumpmask(c_dump_part_qed_energy) = &

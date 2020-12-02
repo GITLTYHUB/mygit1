@@ -90,6 +90,7 @@ MODULE shared_data
   ! particle pack and unpack routines
   TYPE particle
     REAL(num), DIMENSION(3) :: part_p
+    REAL(num), DIMENSION(3) :: part_sp  ! LTY
     REAL(num), DIMENSION(c_ndims) :: part_pos
 #if !defined(PER_SPECIES_WEIGHT) || defined(PHOTONS)
     REAL(num) :: weight

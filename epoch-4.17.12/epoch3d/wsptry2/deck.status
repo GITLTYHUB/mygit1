@@ -1,0 +1,491 @@
+ EPOCH3D vnknow   unknown-unknown-ga1e9198-dirty 1606909381.412        
+
+Deck state:  1
+
+ Beginning "constant" block
+
+ 	Element lambda0=1.0*micron handled OK
+ 	Element omega=2*pi*c/lambda0 handled OK
+ 	Element T0=2*pi/omega handled OK
+ 	Element alaser=100 handled OK
+ 	Element ilaser=alaser*alaser*c*c*c*epsilon0*me*me*omega*omega/(2*qe*qe) handled OK
+ 	Element r=sqrt(y*y+z*z) handled OK
+ 	Element phi0=if(y gt 0,if(z gt 0,atan(z/y),atan(z/y)+2*pi),atan(z/y)+pi) handled OK
+ 	Element p=0 handled OK
+ 	Element l=0 handled OK
+ 	Element C_pl=1.0 handled OK
+ 	Element L_pl=1.0 handled OK
+ 	Element w0=3*micron handled OK
+ 	Element xr=pi*w0*w0/lambda0 handled OK
+ 	Element xr2=2*pi*w0*w0/lambda0 handled OK
+ 	Element wx=w0*sqrt(1+(x/xr)^2) handled OK
+ 	Element wx2=w0*sqrt(1+(x/xr2)^2) handled OK
+ 	Element rx=x*x+xr*xr handled OK
+ 	Element rx2=x*x+xr2*xr2 handled OK
+ 	Element phix=atan(x/xr) handled OK
+ 	Element phix2=atan(x/xr2) handled OK
+ 	Element tend=30*T0 handled OK
+ 	Element den_nc=critical(omega) handled OK
+
+ Ending "constant" block
+
+ Beginning "control" block
+
+ 	Element x_min=-11.0 * micron handled OK
+ 	Element x_max=31.0 * micron handled OK
+ 	Element y_min=-8.0 * micron handled OK
+ 	Element y_max=8.0 * micron handled OK
+ 	Element z_min=-8.0 * micron handled OK
+ 	Element z_max=8.0 * micron handled OK
+ 	Element nx=300 handled OK
+ 	Element ny=100 handled OK
+ 	Element nz=100 handled OK
+ 	Element t_end=tend handled OK
+ 	Element dt_multiplier=0.9 handled OK
+ 	Element print_constants=T handled OK
+stdout_frequency =        10
+ 	Element stdout_frequency=10 handled OK
+
+ Ending "control" block
+
+ Beginning "boundaries" block
+
+bc_x_min =         3
+ 	Element bc_x_min=simple_laser handled OK
+bc_x_max =         4
+ 	Element bc_x_max=simple_outflow handled OK
+bc_y_min =         1
+ 	Element bc_y_min=periodic handled OK
+bc_y_max =         1
+ 	Element bc_y_max=periodic handled OK
+bc_z_min =         1
+ 	Element bc_z_min=periodic handled OK
+bc_z_max =         1
+ 	Element bc_z_max=periodic handled OK
+
+ Ending "boundaries" block
+
+ Beginning "laser" block
+
+ 	Element boundary=x_min handled OK
+ 	Element id=1 handled OK
+ 	Element intensity=ilaser handled OK
+ 	Element lambda=lambda0 handled OK
+ 	Element pol_angle=0.0 handled OK
+ 	Element phase=-pi*r*r*x/(lambda0*rx)+(abs(l)+2.0*p+1.0)*phix-l*phi0 handled OK
+ 	Element profile=C_pl*(w0/wx)*((r*sqrt(2.0)/wx)^(abs(l)))*exp(-r*r/(wx*wx))*L_pl handled OK
+ 	Element t_profile=gauss(time,7.5*T0,5*T0) handled OK
+
+ Ending "laser" block
+
+ Beginning "laser" block
+
+ 	Element boundary=x_min handled OK
+ 	Element id=2 handled OK
+ 	Element intensity=ilaser*0.5 handled OK
+ 	Element lambda=0.5*lambda0 handled OK
+ 	Element pol_angle=0.0 handled OK
+ 	Element phase=-pi*r*r*x/(0.5*lambda0*rx2)+(abs(l)+2.0*p+1.0)*phix2-l*phi0 handled OK
+ 	Element profile=C_pl*(w0/wx2)*((r*sqrt(2.0)/wx2)^(abs(l)))*exp(-r*r/(wx2*wx2))*L_pl handled OK
+ 	Element t_profile=gauss(time,7.5*T0,5*T0) handled OK
+
+ Ending "laser" block
+
+ Beginning "species" block
+
+ 	Element name=Electron handled OK
+charge =  -1.0000000000    
+ 	Element charge=-1.0 handled OK
+mass =   1.0000000000    
+ 	Element mass=1.0 handled OK
+ 	Element npart_per_cell=4 handled OK
+ 	Element density=if((x gt 20.0*micron) and (r lt 1.5*micron) and (x lt 30*micron), 0.1*den_nc,0) handled OK
+ 	Element temp_ev=0.0 handled OK
+ 	Element drift_px=-4000*me*c handled OK
+ 	Element identify=electron handled OK
+
+ Ending "species" block
+
+ Beginning "species" block
+
+ 	Element name=Photon handled OK
+charge =   0.0000000000    
+ 	Element charge=0.0 handled OK
+mass =   0.0000000000    
+ 	Element mass=0.0 handled OK
+ 	Element density=0.0 handled OK
+ 	Element npart=0 handled OK
+ 	Element identify=photon handled OK
+
+ Ending "species" block
+
+ Beginning "species" block
+
+ 	Element name=Bwelectron handled OK
+charge =  -1.0000000000    
+ 	Element charge=-1.0 handled OK
+mass =   1.0000000000    
+ 	Element mass=1.0 handled OK
+ 	Element npart_per_cell=4 handled OK
+ 	Element temp_ev=0.0 handled OK
+ 	Element density=if((x gt 30.3*micron) and (r lt 0.1*micron) and (x lt 30.4*micron), 0.1*den_nc,0) handled OK
+ 	Element identify=bw_electron handled OK
+
+ Ending "species" block
+
+ Beginning "species" block
+
+ 	Element name=Bwpositron handled OK
+charge =   1.0000000000    
+ 	Element charge=1.0 handled OK
+mass =   1.0000000000    
+ 	Element mass=1.0 handled OK
+ 	Element npart_per_cell=4 handled OK
+ 	Element temp_ev=0.0 handled OK
+ 	Element density=if((x gt 30.3*micron) and (r lt 0.1*micron) and (x lt 30.4*micron), 0.1*den_nc,0) handled OK
+ 	Element identify=bw_positron handled OK
+
+ Ending "species" block
+
+ Beginning "qed" block
+
+ 	Element use_qed=T handled OK
+ 	Element qed_start_time=0.0 handled OK
+ 	Element produce_photons=T handled OK
+ 	Element photon_energy_min=1.0 * 1000000 * ev handled OK
+ 	Element photon_dynamics=T handled OK
+ 	Element produce_pairs=T handled OK
+
+ Ending "qed" block
+
+ Beginning "subset" block
+
+ 	Element name=ele handled OK
+ 	Element random_fraction=0.1 handled OK
+ 	Element include_species=Electron handled OK
+
+ Ending "subset" block
+
+ Beginning "subset" block
+
+ 	Element name=backgroundph handled OK
+ 	Element random_fraction=0.1 handled OK
+ 	Element include_species=Photon handled OK
+
+ Ending "subset" block
+
+ Beginning "subset" block
+
+ 	Element name=background handled OK
+ 	Element random_fraction=0.1 handled OK
+ 	Element include_species=Bwelectron handled OK
+ 	Element include_species=Bwpositron handled OK
+
+ Ending "subset" block
+
+ Beginning "output" block
+
+ 	Element name=o1 handled OK
+ 	Element file_prefix=ebn handled OK
+ 	Element dt_snapshot=10 * T0 handled OK
+ 	Element number_density=always + species + single handled OK
+ 	Element bz=always + single handled OK
+
+ Ending "output" block
+
+ Beginning "output" block
+
+ 	Element name=o2 handled OK
+ 	Element file_prefix=qed handled OK
+ 	Element dt_snapshot=10 * T0 handled OK
+ 	Element particle_grid=ele + background + backgroundph + single handled OK
+ 	Element px=ele + background + backgroundph + single handled OK
+ 	Element py=ele + background + backgroundph + single handled OK
+ 	Element pz=ele + background + backgroundph + single handled OK
+ 	Element particle_weight=ele + background + backgroundph + single handled OK
+ 	Element particle_energy=ele + background + backgroundph + single handled OK
+ 	Element spy=ele + single handled OK
+
+ Ending "output" block
+
+ Constant block values after first pass:
+
+  lambda0 =  0.10000000000E-05
+  omega =  0.18836515673E+16
+  T0 =  0.33356409520E-14
+  alaser =   100.00000000    
+  ilaser =  0.13681671274E+27
+  r =   0.0000000000    
+  phi0 =                NaN
+  p =   0.0000000000    
+  l =   0.0000000000    
+  C_pl =   1.0000000000    
+  L_pl =   1.0000000000    
+  w0 =  0.30000000000E-05
+  xr =  0.28274333882E-04
+  xr2 =  0.56548667765E-04
+  wx =  0.30000000000E-05
+  wx2 =  0.30000000000E-05
+  rx =  0.79943795649E-09
+  rx2 =  0.31977518260E-08
+  phix =   0.0000000000    
+  phix2 =   0.0000000000    
+  tend =  0.10006922856E-12
+  den_nc =  0.11148542159E+28
+Deck state:  2
+
+ Beginning "constant" block
+
+ 	Element lambda0=1.0*micron handled OK
+ 	Element omega=2*pi*c/lambda0 handled OK
+ 	Element T0=2*pi/omega handled OK
+ 	Element alaser=100 handled OK
+ 	Element ilaser=alaser*alaser*c*c*c*epsilon0*me*me*omega*omega/(2*qe*qe) handled OK
+ 	Element r=sqrt(y*y+z*z) handled OK
+ 	Element phi0=if(y gt 0,if(z gt 0,atan(z/y),atan(z/y)+2*pi),atan(z/y)+pi) handled OK
+ 	Element p=0 handled OK
+ 	Element l=0 handled OK
+ 	Element C_pl=1.0 handled OK
+ 	Element L_pl=1.0 handled OK
+ 	Element w0=3*micron handled OK
+ 	Element xr=pi*w0*w0/lambda0 handled OK
+ 	Element xr2=2*pi*w0*w0/lambda0 handled OK
+ 	Element wx=w0*sqrt(1+(x/xr)^2) handled OK
+ 	Element wx2=w0*sqrt(1+(x/xr2)^2) handled OK
+ 	Element rx=x*x+xr*xr handled OK
+ 	Element rx2=x*x+xr2*xr2 handled OK
+ 	Element phix=atan(x/xr) handled OK
+ 	Element phix2=atan(x/xr2) handled OK
+ 	Element tend=30*T0 handled OK
+ 	Element den_nc=critical(omega) handled OK
+
+ Ending "constant" block
+
+ Beginning "control" block
+
+ 	Element x_min=-11.0 * micron handled OK
+ 	Element x_max=31.0 * micron handled OK
+ 	Element y_min=-8.0 * micron handled OK
+ 	Element y_max=8.0 * micron handled OK
+ 	Element z_min=-8.0 * micron handled OK
+ 	Element z_max=8.0 * micron handled OK
+ 	Element nx=300 handled OK
+ 	Element ny=100 handled OK
+ 	Element nz=100 handled OK
+ 	Element t_end=tend handled OK
+ 	Element dt_multiplier=0.9 handled OK
+ 	Element print_constants=T handled OK
+ 	Element stdout_frequency=10 handled OK
+
+ Ending "control" block
+
+ Beginning "boundaries" block
+
+ 	Element bc_x_min=simple_laser handled OK
+ 	Element bc_x_max=simple_outflow handled OK
+ 	Element bc_y_min=periodic handled OK
+ 	Element bc_y_max=periodic handled OK
+ 	Element bc_z_min=periodic handled OK
+ 	Element bc_z_max=periodic handled OK
+
+ Ending "boundaries" block
+
+ Beginning "laser" block
+
+boundary =         1
+ 	Element boundary=x_min handled OK
+id =         1
+ 	Element id=1 handled OK
+intensity =  0.13681671274E+27
+ 	Element intensity=ilaser handled OK
+ 	Element lambda=lambda0 handled OK
+pol_angle =   0.0000000000    
+ 	Element pol_angle=0.0 handled OK
+ 	Element phase=-pi*r*r*x/(lambda0*rx)+(abs(l)+2.0*p+1.0)*phix-l*phi0 handled OK
+ 	Element profile=C_pl*(w0/wx)*((r*sqrt(2.0)/wx)^(abs(l)))*exp(-r*r/(wx*wx))*L_pl handled OK
+ 	Element t_profile=gauss(time,7.5*T0,5*T0) handled OK
+
+ Ending "laser" block
+
+ Beginning "laser" block
+
+boundary =         1
+ 	Element boundary=x_min handled OK
+id =         2
+ 	Element id=2 handled OK
+intensity =  0.68408356369E+26
+ 	Element intensity=ilaser*0.5 handled OK
+ 	Element lambda=0.5*lambda0 handled OK
+pol_angle =   0.0000000000    
+ 	Element pol_angle=0.0 handled OK
+ 	Element phase=-pi*r*r*x/(0.5*lambda0*rx2)+(abs(l)+2.0*p+1.0)*phix2-l*phi0 handled OK
+ 	Element profile=C_pl*(w0/wx2)*((r*sqrt(2.0)/wx2)^(abs(l)))*exp(-r*r/(wx2*wx2))*L_pl handled OK
+ 	Element t_profile=gauss(time,7.5*T0,5*T0) handled OK
+
+ Ending "laser" block
+
+ Beginning "species" block
+
+ 	Element name=Electron handled OK
+charge =  -1.0000000000    
+ 	Element charge=-1.0 handled OK
+mass =   1.0000000000    
+ 	Element mass=1.0 handled OK
+npart_per_cell =   4.0000000000    
+ 	Element npart_per_cell=4 handled OK
+ 	Element density=if((x gt 20.0*micron) and (r lt 1.5*micron) and (x lt 30*micron), 0.1*den_nc,0) handled OK
+ 	Element temp_ev=0.0 handled OK
+ 	Element drift_px=-4000*me*c handled OK
+ 	Element identify=electron handled OK
+
+ Ending "species" block
+
+ Beginning "species" block
+
+ 	Element name=Photon handled OK
+charge =   0.0000000000    
+ 	Element charge=0.0 handled OK
+mass =   0.0000000000    
+ 	Element mass=0.0 handled OK
+ 	Element density=0.0 handled OK
+npart =         0
+ 	Element npart=0 handled OK
+ 	Element identify=photon handled OK
+
+ Ending "species" block
+
+ Beginning "species" block
+
+ 	Element name=Bwelectron handled OK
+charge =  -1.0000000000    
+ 	Element charge=-1.0 handled OK
+mass =   1.0000000000    
+ 	Element mass=1.0 handled OK
+npart_per_cell =   4.0000000000    
+ 	Element npart_per_cell=4 handled OK
+ 	Element temp_ev=0.0 handled OK
+ 	Element density=if((x gt 30.3*micron) and (r lt 0.1*micron) and (x lt 30.4*micron), 0.1*den_nc,0) handled OK
+ 	Element identify=bw_electron handled OK
+
+ Ending "species" block
+
+ Beginning "species" block
+
+ 	Element name=Bwpositron handled OK
+charge =   1.0000000000    
+ 	Element charge=1.0 handled OK
+mass =   1.0000000000    
+ 	Element mass=1.0 handled OK
+npart_per_cell =   4.0000000000    
+ 	Element npart_per_cell=4 handled OK
+ 	Element temp_ev=0.0 handled OK
+ 	Element density=if((x gt 30.3*micron) and (r lt 0.1*micron) and (x lt 30.4*micron), 0.1*den_nc,0) handled OK
+ 	Element identify=bw_positron handled OK
+
+ Ending "species" block
+
+ Beginning "qed" block
+
+use_qed = T
+ 	Element use_qed=T handled OK
+qed_start_time =   0.0000000000    
+ 	Element qed_start_time=0.0 handled OK
+produce_photons = T
+ 	Element produce_photons=T handled OK
+photon_energy_min =  0.16021765650E-12
+ 	Element photon_energy_min=1.0 * 1000000 * ev handled OK
+photon_dynamics = T
+ 	Element photon_dynamics=T handled OK
+produce_pairs = T
+ 	Element produce_pairs=T handled OK
+
+ Ending "qed" block
+
+ Beginning "subset" block
+
+ 	Element name=ele handled OK
+ 	Element random_fraction=0.1 handled OK
+include_species =         1
+ 	Element include_species=Electron handled OK
+
+ Ending "subset" block
+
+ Beginning "subset" block
+
+ 	Element name=backgroundph handled OK
+ 	Element random_fraction=0.1 handled OK
+include_species =         2
+ 	Element include_species=Photon handled OK
+
+ Ending "subset" block
+
+ Beginning "subset" block
+
+ 	Element name=background handled OK
+ 	Element random_fraction=0.1 handled OK
+include_species =         3
+ 	Element include_species=Bwelectron handled OK
+include_species =         4
+ 	Element include_species=Bwpositron handled OK
+
+ Ending "subset" block
+
+ Beginning "output" block
+
+ 	Element name=o1 handled OK
+ 	Element file_prefix=ebn handled OK
+dt_snapshot =  0.33356409520E-13
+ 	Element dt_snapshot=10 * T0 handled OK
+ 	Element number_density=always + species + single handled OK
+ 	Element bz=always + single handled OK
+
+ Ending "output" block
+
+ Beginning "output" block
+
+ 	Element name=o2 handled OK
+ 	Element file_prefix=qed handled OK
+dt_snapshot =  0.33356409520E-13
+ 	Element dt_snapshot=10 * T0 handled OK
+ 	Element particle_grid=ele + background + backgroundph + single handled OK
+ 	Element px=ele + background + backgroundph + single handled OK
+ 	Element py=ele + background + backgroundph + single handled OK
+ 	Element pz=ele + background + backgroundph + single handled OK
+ 	Element particle_weight=ele + background + backgroundph + single handled OK
+ 	Element particle_energy=ele + background + backgroundph + single handled OK
+
+ *** WARNING ***
+ Element "spy" is set multiple times in this deck.
+ Code will continue using first value in deck
+
+
+ Ending "output" block
+
+ *** WARNING ***
+ Block "output" contains errors
+
+ Initial conditions complete and valid.
+ Constant block values after second pass:
+
+  lambda0 =  0.10000000000E-05
+  omega =  0.18836515673E+16
+  T0 =  0.33356409520E-14
+  alaser =   100.00000000    
+  ilaser =  0.13681671274E+27
+  r =  0.11200571414E-04
+  phi0 =   3.9269908170    
+  p =   0.0000000000    
+  l =   0.0000000000    
+  C_pl =   1.0000000000    
+  L_pl =   1.0000000000    
+  w0 =  0.30000000000E-05
+  xr =  0.28274333882E-04
+  xr2 =  0.56548667765E-04
+  wx =  0.32163527493E-05
+  wx2 =  0.30555247098E-05
+  rx =  0.91890285649E-09
+  rx2 =  0.33172167260E-08
+  phix = -0.36887516517    
+  phix2 = -0.19093041283    
+  tend =  0.10006922856E-12
+  den_nc =  0.11148542159E+28
